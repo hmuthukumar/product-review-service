@@ -6,7 +6,9 @@
   "scripts": {
     "start": "npm run build && node ./dist/index.js",
     "build": "tsc",
-    "serve": "nodemon"
+    "serve": "nodemon",
+    "start:prod": "npm run build && pm2 start --name product-review-service ./dist/index.js -i max",
+    "stop:prod": "pm2 run stop product-review-service"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
