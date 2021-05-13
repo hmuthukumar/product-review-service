@@ -1,9 +1,11 @@
 import { ProductReviewRepo, IProductReviewDocument } from "../repositories/ProductReviewRepository";
-import * as mongoose from 'mongoose';
 import { logger } from "../../middleware/common/Logging";
-
+import { SeededDataSetup } from './SeededDataSetup'
 export class ProductReviewDataAccess {
-    constructor() { }
+    constructor() {
+        new SeededDataSetup().addSeededProducts()
+     }
+    
 
     async createNewProductReview(review: any): Promise<any> {
         let productReview = <IProductReviewDocument>(review);
@@ -72,7 +74,7 @@ export class ProductReviewDataAccess {
             if (productReviews.errors) {
                 return { thrown: true, success: false, status: 422, message: "db is currently unable to process request" }
             }
-            logger.info("result after deletion of product " + productId + ":" + productReviews)
+            logger.info("result after deletion of review data for product " + productId + ":" + productReviews)
             return productReviews;
         }
         else {

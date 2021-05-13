@@ -1,4 +1,5 @@
 import { Schema, Document, Model, model } from "mongoose";
+import { MongooseAccess } from '../adapters/MongoAccess'
 export interface IProductReviewDocument extends Document {
     _id: string,
     totalScore: number,
@@ -25,4 +26,8 @@ const ProductReviewSchema: Schema = new Schema({
     updatedDate: { type: Date, default: Date.now }
 });
 
-export const ProductReviewRepo: Model<IProductReviewDocument> = model<IProductReviewDocument>('productreview', ProductReviewSchema);
+
+export type RepoType = Model<IProductReviewDocument>;
+
+export const ProductReviewRepo: RepoType
+    = MongooseAccess.mongooseConnection.model<IProductReviewDocument>("product-reviews", ProductReviewSchema);

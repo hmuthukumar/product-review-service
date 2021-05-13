@@ -4,11 +4,13 @@
   "description": "Product Review Service",
   "main": "index.js",
   "scripts": {
+    "clean": "node ./node_modules/rimraf/bin.js dist",
     "start": "npm run build && node ./dist/index.js",
     "build": "tsc",
     "serve": "nodemon",
     "start:prod": "npm run build && pm2 start --name product-review-service ./dist/index.js -i max",
-    "stop:prod": "pm2 run stop product-review-service"
+    "stop:prod": "pm2 run stop product-review-service",
+    "test:serve": "start tsc -w & nodemon --watch . --ext ts --exec \"mocha -r ts-node/register  ./**/*.test.ts\""
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -21,7 +23,6 @@
     "express-jwt": "^6.0.0",
     "helmet": "^4.6.0",
     "jwks-rsa": "^2.0.3",
-    "lodash": "^4.17.21",
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.7",
     "mongoose-int32": "^0.4.1",
@@ -38,10 +39,16 @@
     "@types/debug": "0.0.30",
     "@types/express": "^4.0.39",
     "@types/helmet": "0.0.37",
+    "@types/lodash": "^4.14.169",
+    "@types/mocha": "^8.2.2",
     "@types/mongodb": "^3.6.12",
     "@types/node": "^15.0.2",
+    "@types/supertest": "^2.0.11",
     "@types/winston": "^2.3.7",
+    "lodash": "^4.17.21",
+    "mocha": "^8.4.0",
     "nodemon": "^2.0.7",
+    "supertest": "^6.1.3",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   },

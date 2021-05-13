@@ -1,4 +1,4 @@
-import { Controller, Get, JsonController, Post, Put, Param, Delete, Body, OnUndefined, UseBefore, Req, Res } from 'routing-controllers';
+import {  Get, JsonController, Post, Put, Param, Delete, Body, OnUndefined, Req, Res } from 'routing-controllers';
 import { validateProductReviewRequest } from '../../business-layer/validator/ProductReviewValidation';
 import { logger } from '../../middleware/common/Logging';
 import { ProductReviewDataAccess } from '../../data-layer/data-access/ProductReviewDataAccess';
@@ -43,15 +43,13 @@ export class ProductReviewController {
         logger.debug("Number of validation errors :-", validationErrors.length);
         if (validationErrors.length > 0) {
             throw {
-                thrown: true,
+                thrown: false,
                 status: 401,
                 message: 'Incorrect Input',
                 data: validationErrors
             }
         }
         let result = await this.producReviewDataAccess.createNewProductReview(request);
-        console.log(result);
-        console.log(typeof result);
         if (result._id) {
             let newProduct = new ProductReviewModel(result);
             let newProductResult = Object.assign({ product: newProduct.getClientProductModel() });

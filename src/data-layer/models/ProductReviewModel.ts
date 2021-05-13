@@ -28,7 +28,7 @@ export class ProductReviewModel{
             id:this._useModel._id,
             totalScore:this._useModel.totalScore,
             numberOfReviews:this._useModel.numberOfReviews,
-            averageReviewScore:this._useModel.totalScore / this._useModel.numberOfReviews,
+            averageReviewScore:parseFloat((this._useModel.totalScore / this._useModel.numberOfReviews).toFixed(2))
         })
     }
 }
