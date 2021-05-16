@@ -45,11 +45,22 @@ export class SeededDataSetup {
         ]
     }
 
+    /** 
+     * Implementation only for Development environments
+    */
 
     async addSeededProducts(): Promise<any> {
         try {
-            await ProductReviewRepo.create(<IProductReviewDocument><unknown>(SeededDataSetup.DATA1))
-            await ProductReviewRepo.create(<IProductReviewDocument><unknown>(SeededDataSetup.DATA2))
+            await ProductReviewRepo.updateOne(
+                { _id: 'C77154' },
+                <IProductReviewDocument><unknown>(SeededDataSetup.DATA1),
+                { upsert: true }
+            )
+            await ProductReviewRepo.updateOne(
+                { _id: 'GN2300' },
+                <IProductReviewDocument><unknown>(SeededDataSetup.DATA2),
+                { upsert: true }
+            )
         }
         catch (err) {
             logger.error("initial seeded data already added, ignore this error")

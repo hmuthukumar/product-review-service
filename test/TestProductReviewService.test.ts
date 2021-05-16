@@ -33,7 +33,7 @@ describe("GET an existing product with review summary /review/C77154", () => {
 });
 
 /*
-This test suite must run for all test casesto complete a testing cycle, 
+This test suite must run for all test cases to complete a testing cycle in terms of test data, 
 otherwise stale data must be left and further tests may fail
 Remedy is to clean the stale data manually.  
 */
@@ -48,6 +48,18 @@ let expectedSummary2 = { "product": { "id": "DZ1410", "totalScore": 8, "numberOf
 
 describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
 
+    var token = null
+
+    before(function(done) {
+      apptest
+        .post('/auth/token')
+        .send({ username: "admin", password: "admin123" })
+        .end(function(err, res) {
+          token = (res.body).authToken; 
+          done();
+        });
+    });
+
     it("Step 0: Delete review data for DZ1410 as a safety net", async () => {
         return apptest.delete("/review/DZ1410")
     });
@@ -59,6 +71,7 @@ describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
 
     it("Step 2: Try creation of first review for DZ1410 with 0 valid and 3 invalid data", async () => {
         return apptest.put("/review/DZ1410")
+            .set('auth', token)
             .send(emptyReviewPostData)
             .expect(500)
             .then(response => {
@@ -70,6 +83,7 @@ describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
 
     it("Step 3: Try creation of first review for DZ1410 with 1 valid and 2 invalid data", async () => {
         return apptest.put("/review/DZ1410")
+            .set('auth', token)
             .send(invalidReviewPostData1)
             .expect(500)
             .then(response => {
@@ -81,6 +95,7 @@ describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
 
     it("Step 4: Try creation of first review for DZ1410 with 2 valid and 1 invalid data", async () => {
         return apptest.put("/review/DZ1410")
+            .set('auth', token)
             .send(invalidReviewPostData2)
             .expect(500)
             .then(response => {
@@ -92,6 +107,7 @@ describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
 
     it("Step 5: Try creation of first review for DZ1410 with 2 valid and 1 invalid data", async () => {
         return apptest.put("/review/DZ1410")
+            .set('auth', token)
             .send(invalidReviewPostData2)
             .expect(500)
             .then(response => {
@@ -104,6 +120,7 @@ describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
     
     it("Step 6: Try creation of first review for DZ1410 with all valid data", async () => {
         return apptest.put("/review/DZ1410")
+            .set('auth', token)
             .send(validReviewPostData1)
             .expect(200)
             .then(response => {
@@ -117,6 +134,7 @@ describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
         
     it("Step 7: Try creation of second review for DZ1410 with all valid data", async () => {
         return apptest.put("/review/DZ1410")
+            .set('auth', token)
             .send(validReviewPostData2)
             .expect(200)
             .then(response => {
@@ -128,6 +146,7 @@ describe("Test all APIs with product DZ1410 /review/DZ1410", () => {
 
     it("Step 8: Delete review data of DZ1410", async () => {
         return apptest.delete("/review/DZ1410")
+            .set('auth', token)
             .expect(200)
     });
 

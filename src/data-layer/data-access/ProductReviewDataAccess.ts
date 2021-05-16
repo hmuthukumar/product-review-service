@@ -3,16 +3,16 @@ import { logger } from "../../middleware/common/Logging";
 import { SeededDataSetup } from './SeededDataSetup'
 export class ProductReviewDataAccess {
     constructor() {
+        //Implementation only for the development environment to add the seeded data
         new SeededDataSetup().addSeededProducts()
-     }
-    
+    }
+
 
     async createNewProductReview(review: any): Promise<any> {
-        let productReview = <IProductReviewDocument>(review);
-
-        var productReviews = await ProductReviewRepo.findById(review.productId);
-        if (productReviews) {
-            let updatedReviews = await productReviews.update({
+        //Upsert review 
+        let updatedReviews = await ProductReviewRepo.updateOne(
+            { _id: review.productId },
+            {
                 $inc: {
                     numberOfReviews: 1,
                     totalScore: review.score
@@ -25,34 +25,21 @@ export class ProductReviewDataAccess {
                         reviewText: review.reviewText
                     }
                 }
-            }).exec();
-            if (updatedReviews.errors) {
-                return { thrown: true, success: false, status: 422, message: "db is currently unable to process request" }
-            }
-            productReviews = await ProductReviewRepo.findById(review.productId);
-            return productReviews
+            },
+            { upsert: true }
+        );
+        //If the inserted/updated record count is not one then there is something wrong with the update
+        //and hence throw error
+        if (updatedReviews.ok != 1) {
+            return { thrown: true, success: false, status: 422, message: "db is currently unable to process request" }
         }
-        else {
-            productReviews = <IProductReviewDocument><unknown>
-                ({
-                    _id: review.productId,
-                    totalScore: review.score,
-                    numberOfReviews: 1,
-                    reviews: [{
-                        reviewedBy: review.reviewedBy,
-                        score: review.score,
-                        reviewText: review.reviewText
-                    }]
-                });
-            let addedReview = await ProductReviewRepo.create(productReviews)
-            if (addedReview.errors) {
-                return { thrown: true, success: false, status: 422, message: "db is currently unable to process request" }
-            }
-            return addedReview
-        }
+        //Read the latest DB state to post the result back to the caller. 
+        // Arguably this read could go into controller
+        let productReviews = await ProductReviewRepo.findById(review.productId);
+        return productReviews
     }
 
-    async getReviewSummaryByProductId(productId: string): Promise<any> {
+    async getReviewByProductId(productId: string): Promise<any> {
 
         let result = await ProductReviewRepo.findById(productId);
         if (result) {

@@ -43,6 +43,8 @@ class MongooseAccess {
 
     // When the connection is disconnected
     this.mongooseConnection.on('disconnected', () => {
+      //Keep trying the DB connection every 10 seconds
+      //when it is in disconnected mode, This will provide some resience for the system
       setTimeout(function() {
         this.mongooseInstance = Mongoose.connect(connectionString, {
                                     useNewUrlParser: true,
@@ -60,6 +62,8 @@ class MongooseAccess {
     });
 
     // If the Node process ends, close the Mongoose connection
+    // arguably this can be done for SIGTERM as well
+    //Anyway this is one of the step for graceful shutdown
     process.on('SIGINT', () => {
       this.mongooseConnection.close(() => {
       logger.info('Mongoose default connection disconnected through app termination.');

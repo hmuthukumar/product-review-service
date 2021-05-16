@@ -5,16 +5,19 @@
   "main": "index.js",
   "scripts": {
     "clean": "node ./node_modules/rimraf/bin.js dist",
-    "start": "npm run build && node ./dist/index.js",
+    "start": "npm run build && node ./dist/Index.js",
     "build": "tsc",
-    "serve": "nodemon",
-    "start:prod": "npm run build && pm2 start --name product-review-service ./dist/index.js -i max",
-    "stop:prod": "pm2 run stop product-review-service",
-    "test:serve": "start tsc -w & nodemon --watch . --ext ts --exec \"mocha -r ts-node/register  ./**/*.test.ts\""
+    "serve": "npm run build && nodemon ./dist/Index.js",
+    "start:prod": "npm run build && pm2 start --name product-review-service ./dist/Index.js -i max",
+    "stop:prod": "pm2 stop product-review-service",
+    "test": "npm run build && mocha -r ts-node/register  ./**/*.test.ts",
+    "test:serve": "npm run build && nodemon --watch . --ext ts --exec \"mocha -r ts-node/register  ./**/*.test.ts\""
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "bson": "^4.3.0",
+    "class-validator": "^0.13.1",
     "config": "^1.28.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
@@ -22,6 +25,7 @@
     "express": "^4.16.2",
     "express-jwt": "^6.0.0",
     "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.3",
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.7",

@@ -1,11 +1,17 @@
 {
-    "express":{
-        "port":3000,
-        "debug":5858,
-        "host":"product-reviews-service"
+    "express": {
+        "port": 3000,
+        "debug": 5858,
+        "host": "product-reviews-service"
     },
-    "mongo":{
+    "mongo": {
         "urlClient": "mongodb://127.0.0.1:27017/product-reviews"
     },
-        "loglevel": "info"
+    "loglevel": "info",
+    "jwtSecret": "muthujwt",
+    "serviceAccount": {
+        "id": "a1234",
+        "username": "admin",
+        "password": "admin123"
+    }
 }
